@@ -101,7 +101,9 @@ public class ImageViewController extends AppCompatActivity {
                         else{
                             currentPhoto.tags.add("person="+personTagValue.getText().toString());
                             tags.add("person="+personTagValue.getText().toString());
+                            MainActivity.allTags.add("person="+personTagValue.getText().toString());
                             adapter.notifyDataSetChanged();
+                            MainActivity.save();
                         }
                     }
                 });
@@ -132,9 +134,11 @@ public class ImageViewController extends AppCompatActivity {
                         else{
                             currentPhoto.tags.add("location="+locationTagValue.getText().toString());
                             tags.add("location="+locationTagValue.getText().toString());
+                            MainActivity.allTags.add("location="+locationTagValue.getText().toString());
                             currentPhoto.location=true;
                             addLocation.setVisibility(View.INVISIBLE);
                             adapter.notifyDataSetChanged();
+                            MainActivity.save();
                         }
                     }
                 });
@@ -161,8 +165,9 @@ public class ImageViewController extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int index) {
                         String removedTag = tags.remove(i);
                         if(removedTag.substring(0,removedTag.indexOf('=')).equals("location")) addLocation.setVisibility(View.VISIBLE);
-                        currentPhoto.tags.remove(i);
+                        MainActivity.allTags.remove(currentPhoto.tags.remove(i));
                         adapter.notifyDataSetChanged();
+                        MainActivity.save();
                     }
                 });
 
@@ -200,6 +205,7 @@ public class ImageViewController extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     album.remove(currentPhoto);
                     MainActivity.albums.get(i).add(currentPhoto);
+                    MainActivity.save();
                     Intent intentToAlbumView = new Intent(view.getContext(), AlbumViewController.class);
                     startActivity(intentToAlbumView);
                     Toast.makeText(context,"Moved Photo",Toast.LENGTH_SHORT).show();

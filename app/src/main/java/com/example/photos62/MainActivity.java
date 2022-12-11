@@ -4,9 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,27 +12,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
-
+import com.google.gson.Gson;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG_DATA = "tag_data";
+    static ArrayList<String> allTags;
     ListView listView;
-    static ArrayList<Album> albums = new ArrayList<Album>();
+    static ArrayList<Album> albums;
     AlbumAdapter adapter;
     FloatingActionButton fab;
     static Album SELECTED_ALBUM;
@@ -42,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
     boolean continueSearch;
 
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
+    private static SharedPreferences sharedPreferences;
+    private static SharedPreferences.Editor editor;
     private static final String ALBUM_DATA = "ALBUM_DATA";
 
     @Override
@@ -52,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(ALBUM_DATA,MODE_PRIVATE);
         editor=sharedPreferences.edit();
-        try { openSave();}
-        catch (Exception e) {e.printStackTrace();}
+        openSave();
 
         setContentView(R.layout.activity_main);
         context = this;
@@ -77,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 if(albumNameInputted.isEmpty() && !albumExists(albumNameInputted)) return;
                 albums.add(new Album(albumNameInputted));
                 adapter.notifyDataSetChanged();
-                try { save(); }
-                catch (IOException e) { e.printStackTrace(); }
+                save();
             });
             albumNameEntry.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
             albumNameEntry.show();
@@ -116,7 +109,13 @@ public class MainActivity extends AppCompatActivity {
     private void search(String tagName) {
         AlertDialog.Builder tagValueDialog = new AlertDialog.Builder(context);
         tagValueDialog.setTitle("Enter "+tagName+" name");
-        EditText tagValueInput = new EditText(context);
+        AutoCompleteTextView tagValueInput = new AutoCompleteTextView(context);
+        ArrayAdapter<String> tagAutoCompAdapter = new ArrayAdapter<String>
+                (this, android.R.layout.select_dialog_item ,allTags);
+        tagValueInput.setAdapter(tagAutoCompAdapter);
+        tagAutoCompAdapter.notifyDataSetChanged();
+        tagValueInput.setThreshold(1);
+
         tagValueDialog.setView(tagValueInput);
         continueSearch=false;
 
@@ -156,11 +155,26 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public void save() throws IOException {
-
+    public static void save(){
+        Gson gson = new Gson();
+        String json = gson.toJson(albums);
+        editor.putString(ALBUM_DATA,json);
+        editor.putString(TAG_DATA, gson.toJson(allTags));
+        editor.commit();
     }
 
-    public void openSave() throws IOException, ClassNotFoundException {
+    public static void openSave(){
+        Gson gson = new Gson();
 
+        String json = sharedPreferences.getString(ALBUM_DATA,null);
+        Type type = new TypeToken<ArrayList<Album>>(){}.getType();
+        albums=gson.fromJson(json,type);
+
+        String json2 = sharedPreferences.getString(TAG_DATA,null);
+        Type type2 = new TypeToken<ArrayList<String>>(){}.getType();
+        allTags=gson.fromJson(json2,type2);
+
+        if (albums==null) albums = new ArrayList<Album>();
+        if(allTags==null) allTags=new ArrayList<String>();
     }
 }

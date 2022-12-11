@@ -58,36 +58,7 @@ public class AlbumViewController extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                 selectedPhoto = selectedAlbum.album.get(position);
-                /*Dialog photoViewDialog = new Dialog(context);
-                photoViewDialog.setTitle(selectedPhoto.name);
-                photoViewDialog.setContentView(R.layout.image_select_view);
-                photoViewDialog.show();
-                photoViewDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialog) {
-                        ImageView selectedPhotoImageView = (ImageView) findViewById(R.id.selected_image_view);
-                        selectedPhotoImageView.setImageURI(selectedPhotoUri);
-                        Button addTagButton = findViewById(R.id.add_tag_button);
-                        ListView tagListView = findViewById(R.id.selected_image_tag_list_view);
-                        addTagButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Dialog addTagDialog = new Dialog(context);
-                                addTagDialog.setContentView(R.layout.add_tag_layout);
-                                Spinner tagNameSpinner = (Spinner) findViewById(R.id.spinnerTagValues);
-                                EditText tagValueInput = (EditText) findViewById(R.id.tagValueInput);
-                                Button addTagDialogButton = (Button) findViewById(R.id.add_tag_dialog_button);
-                                addTagDialog.show();
-                                addTagDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                                    @Override
-                                    public void onShow(DialogInterface dialogInterface) {
 
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });*/
 
                 Intent intentToImageView = new Intent(view.getContext(), ImageViewController.class);
                 startActivity(intentToImageView);
@@ -122,6 +93,7 @@ public class AlbumViewController extends AppCompatActivity {
                     Photo newPhoto = new Photo(selectedImageUri.toString(),input.getText().toString());
                     selectedAlbum.add(newPhoto);
                     adapter.notifyDataSetChanged();
+                    MainActivity.save();
                 }
             });
             photoNameEntry.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -155,6 +127,7 @@ public class AlbumViewController extends AppCompatActivity {
                 startActivity(intentToMainActivity);
                 String deletedAlbumName = MainActivity.SELECTED_ALBUM.name;
                 MainActivity.albums.remove(MainActivity.SELECTED_ALBUM);
+                MainActivity.save();
                 Toast.makeText(this,deletedAlbumName+" Deleted",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menuRename:
@@ -169,6 +142,7 @@ public class AlbumViewController extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         selectedAlbum.name=input.getText().toString();
                         setTitle(selectedAlbum.name);
+                        MainActivity.save();
                         toaster("Renamed to "+selectedAlbum.name,context);
                     }
                 });
