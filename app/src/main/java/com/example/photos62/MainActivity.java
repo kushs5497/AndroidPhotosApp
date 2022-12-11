@@ -27,19 +27,16 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_DATA = "tag_data";
-    static ArrayList<String> allTags;
-    ListView listView;
-    static ArrayList<Album> albums;
-    AlbumAdapter adapter;
-    FloatingActionButton fab;
-    static Album SELECTED_ALBUM;
-    Context context;
-
-    boolean continueSearch;
-
+    private static final String ALBUM_DATA = "ALBUM_DATA";
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
-    private static final String ALBUM_DATA = "ALBUM_DATA";
+    static ArrayList<String> allTags;
+    static ArrayList<Album> albums;
+    static Album SELECTED_ALBUM;
+    ListView listView;
+    AlbumAdapter adapter;
+    FloatingActionButton fab;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +65,14 @@ public class MainActivity extends AppCompatActivity {
             albumNameEntry.setView(input);
             albumNameEntry.setPositiveButton("Add", (dialog, which) -> {
                 String albumNameInputted = input.getText().toString();
-                if(albumNameInputted.isEmpty() && !albumExists(albumNameInputted)) return;
+                if(albumNameInputted.trim().isEmpty()) {
+                    Toast.makeText(context,"No Album Name Entered",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(albumExists(albumNameInputted)) {
+                    Toast.makeText(context,"Album Already Exists",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 albums.add(new Album(albumNameInputted));
                 adapter.notifyDataSetChanged();
                 save();
@@ -103,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-        //return super.onOptionsItemSelected(item);
     }
 
     private void search(String tagName) {
@@ -111,13 +114,12 @@ public class MainActivity extends AppCompatActivity {
         tagValueDialog.setTitle("Enter "+tagName+" name");
         AutoCompleteTextView tagValueInput = new AutoCompleteTextView(context);
         ArrayAdapter<String> tagAutoCompAdapter = new ArrayAdapter<String>
-                (this, android.R.layout.select_dialog_item ,allTags);
+                (this, android.R.layout.select_dialog_item ,allTags.toArray(new String[0]));
         tagValueInput.setAdapter(tagAutoCompAdapter);
         tagAutoCompAdapter.notifyDataSetChanged();
         tagValueInput.setThreshold(1);
 
         tagValueDialog.setView(tagValueInput);
-        continueSearch=false;
 
         tagValueDialog.setPositiveButton("Search", (dialogInterface, i) -> {
             if(tagValueInput.getText().toString().isEmpty()) dialogInterface.cancel();
@@ -125,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         });
         tagValueDialog.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
         tagValueDialog.show();
-
+        tagValueInput.showDropDown();
 
     }
 

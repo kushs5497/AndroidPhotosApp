@@ -1,25 +1,16 @@
 package com.example.photos62;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -46,32 +37,18 @@ public class AlbumViewController extends AppCompatActivity {
         listView.setAdapter(adapter);
         setTitle(selectedAlbum.name);
 
-        fabPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentChooseNewImage = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intentChooseNewImage,3);
-            }
+        fabPhoto.setOnClickListener(view -> {
+            Intent intentChooseNewImage = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intentChooseNewImage,3);
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-                selectedPhoto = selectedAlbum.album.get(position);
+        listView.setOnItemClickListener((adapter, view, position, arg) -> {
+            selectedPhoto = selectedAlbum.album.get(position);
+            Intent intentToImageView = new Intent(view.getContext(), ImageViewController.class);
+            startActivity(intentToImageView);
 
-
-                Intent intentToImageView = new Intent(view.getContext(), ImageViewController.class);
-                startActivity(intentToImageView);
-
-            }
         });
 
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle the back button event
-            }
-        };
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
@@ -82,29 +59,18 @@ public class AlbumViewController extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && data!=null) {
             Uri selectedImageUri = data.getData();
-
             AlertDialog.Builder photoNameEntry = new AlertDialog.Builder(context);
             EditText input = new EditText(context);
             photoNameEntry.setTitle("Enter New Photo Name");
             photoNameEntry.setView(input);
-            photoNameEntry.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Photo newPhoto = new Photo(selectedImageUri.toString(),input.getText().toString());
-                    selectedAlbum.add(newPhoto);
-                    adapter.notifyDataSetChanged();
-                    MainActivity.save();
-                }
+            photoNameEntry.setPositiveButton("Add", (dialog, which) -> {
+                Photo newPhoto = new Photo(selectedImageUri.toString(),input.getText().toString());
+                selectedAlbum.add(newPhoto);
+                adapter.notifyDataSetChanged();
+                MainActivity.save();
             });
-            photoNameEntry.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-            });
+            photoNameEntry.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
             photoNameEntry.show();
-
-
         }
     }
 
@@ -137,30 +103,19 @@ public class AlbumViewController extends AppCompatActivity {
                 albumRenameDialog.setTitle("Enter New Album Name");
                 albumRenameDialog.setView(input);
 
-                albumRenameDialog.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        selectedAlbum.name=input.getText().toString();
-                        setTitle(selectedAlbum.name);
-                        MainActivity.save();
-                        toaster("Renamed to "+selectedAlbum.name,context);
-                    }
+                albumRenameDialog.setPositiveButton("Add", (dialog, which) -> {
+                    selectedAlbum.name=input.getText().toString();
+                    setTitle(selectedAlbum.name);
+                    MainActivity.save();
+                    toaster("Renamed to "+selectedAlbum.name,context);
                 });
 
-                albumRenameDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
+                albumRenameDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
                 albumRenameDialog.show();
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     public void toaster(String s,Context c){
