@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Photos</string>
+    <string name="submit">plus</string>
+    <string name="search">Search</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="addTag">Add Tag</string>
+    <string name="tagName">Tag Name</string>
+    <string name="tagValue">Tag Value</string>
+    <string name="move">Move</string>
+    <string name="person">Person</string>
+    <string name="search_by_person">Search by Person</string>
+    <string name="search_by_location">Search by Location</string>
+</resources>
