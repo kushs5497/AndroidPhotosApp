@@ -28,6 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
+                android:background="@drawable/ic_baseline_arrow_left_24"
+                android:rotationY="50"
                 android:text="" />
 
             <Button
@@ -36,6 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
+                android:background="@drawable/ic_baseline_arrow_right_24"
+                android:rotationY="-50"
                 android:text="" />
         </LinearLayout>
 
