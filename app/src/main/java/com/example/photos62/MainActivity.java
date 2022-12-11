@@ -157,10 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void save() throws IOException {
-        Gson gson = new Gson();
-        String s = gson.toJson(stringList);
-        editor.putString(KEY_ARRAY_LIST3, s);
-        editor.commit();
+
     }
 
     public void openSave() throws IOException, ClassNotFoundException {
