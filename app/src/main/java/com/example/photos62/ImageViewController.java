@@ -28,7 +28,7 @@ import java.util.ArrayList;
  *
  */
 
-// ImageViewController method which extends AppCompatActivity
+// ImageViewController method For slideshow and Tags
 public class ImageViewController extends AppCompatActivity {
 
     Album album;
