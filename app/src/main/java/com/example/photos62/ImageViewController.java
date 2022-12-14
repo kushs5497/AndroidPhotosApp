@@ -23,6 +23,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * @author Kush and Dhiren
+ *
+ */
+
+// ImageViewController method which extends AppCompatActivity
 public class ImageViewController extends AppCompatActivity {
 
     Album album;
@@ -31,6 +37,7 @@ public class ImageViewController extends AppCompatActivity {
     ArrayList<String> tags;
     Context context;
 
+    // onCreate method to set content
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +62,7 @@ public class ImageViewController extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,tags);
         tagsList.setAdapter(adapter);
 
+        // Left set image location and tags
         left.setOnClickListener(view -> {
             index--;
             if(index<0) index=album.size-1;
@@ -67,6 +75,7 @@ public class ImageViewController extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         });
 
+        // Right set image location and tags
         right.setOnClickListener(view -> {
             index++;
             if(index>= album.size) index=0;
@@ -79,6 +88,7 @@ public class ImageViewController extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         });
 
+        // Set person tag value on current photo
         addPerson.setOnClickListener(view -> {
             AlertDialog.Builder personTagDialog = new AlertDialog.Builder(context);
             personTagDialog.setTitle("Enter Person Name");
@@ -108,6 +118,7 @@ public class ImageViewController extends AppCompatActivity {
             personTagDialog.show();
         });
 
+        // Add location tag value to photo
         addLocation.setOnClickListener(view -> {
             AlertDialog.Builder locationTagDialog = new AlertDialog.Builder(context);
             locationTagDialog.setTitle("Enter Location Name");
@@ -154,12 +165,14 @@ public class ImageViewController extends AppCompatActivity {
         });
     }
 
+    // Get menu of photos
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.select_photo_menu,menu);
         return true;
     }
 
+    // Move photo to where user requests it
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId()==R.id.move_menu_item){

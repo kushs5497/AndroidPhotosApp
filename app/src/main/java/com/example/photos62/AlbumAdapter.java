@@ -9,12 +9,20 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * @author Kush and Dhiren
+ *
+ */
+
+// AlbumAdapter class which extends ArrayAdapter
 public class AlbumAdapter extends ArrayAdapter<Album> {
 
+    // AlbumAdapter constructor
     public AlbumAdapter(Context context, ArrayList<Album> albums){
         super(context,0,albums);
     }
 
+    // GetView method to get album view and set album name
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         Album album = getItem(i);

@@ -14,12 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * @author Kush and Dhiren
+ *
+ */
+
+// PhotoAdapter class extends ArrayAdapter
 public class PhotoAdapter extends ArrayAdapter<Photo> {
 
+    // PhotoAdapter constructor
     public PhotoAdapter(Context context, ArrayList<Photo> album){
         super(context,0,album);
     }
 
+    // View method to get photo view and set dimensions
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         Photo photo = getItem(i);

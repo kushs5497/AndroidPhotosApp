@@ -17,6 +17,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+/**
+ * @author Kush and Dhiren
+ *
+ */
+
+// AlbumViewController class which extends AppCompatActivity class
 public class AlbumViewController extends AppCompatActivity {
 
     FloatingActionButton fabPhoto;
@@ -26,6 +32,7 @@ public class AlbumViewController extends AppCompatActivity {
     static PhotoAdapter adapter;
     static Photo selectedPhoto;
 
+    // onCreate class to choose new image and set display
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.album_view);
@@ -53,6 +60,7 @@ public class AlbumViewController extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    // Method to guide user activity of setting photo name
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -74,6 +82,7 @@ public class AlbumViewController extends AppCompatActivity {
         }
     }
 
+    // CreateOptions menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -81,6 +90,7 @@ public class AlbumViewController extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    // onOptions method to delete album or rename album
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -117,7 +127,7 @@ public class AlbumViewController extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
+    // Toaster method
     public void toaster(String s,Context c){
         Toast.makeText(c,s,Toast.LENGTH_SHORT).show();
     }

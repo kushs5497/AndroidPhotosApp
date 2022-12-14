@@ -24,6 +24,12 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+/**
+ * @author Kush and Dhiren
+ *
+ */
+
+// MainActivity class which extends AppCompatActivity
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_DATA = "tag_data";
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
     Context context;
 
+    // onCreate method to set album with new album name
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Inflate album list menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -95,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // Search items by person and location
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -109,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Search method to search for tag values
     private void search(String tagName) {
         AlertDialog.Builder tagValueDialog = new AlertDialog.Builder(context);
         tagValueDialog.setTitle("Enter "+tagName+" name");
@@ -131,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // Search for photos and tags
     public void searchFor(String tag){
         Album searchResults = new Album("Search Results");
         Log.d("Input text","->"+tag);
@@ -148,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intentToAlbumView);
     }
 
+    // Check if album exists
     private boolean albumExists(String albumName) {
         for(Album a : albums){
             if(a.name.equalsIgnoreCase(albumName)){
@@ -157,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    // Save album data
     public static void save(){
         Gson gson = new Gson();
         String json = gson.toJson(albums);
@@ -165,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
     }
 
+    // Open album and tag data
     public static void openSave(){
         Gson gson = new Gson();
 
